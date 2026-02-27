@@ -14,3 +14,5 @@ The root cause is systemic:
 - 🔗 **Zero cross-modal integration** — buses, metro, auto-rickshaws, ride-shares, and private vehicles operate in silos
 
 This results in millions of commuters losing productive hours daily, skyrocketing fuel consumption, and a compounding environmental burden on already-stressed urban ecosystems.
+
+# Tech Stack Overview
