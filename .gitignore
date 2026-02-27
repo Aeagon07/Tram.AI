@@ -1,0 +1,15 @@
+__pycache__
+.idea
+./venv
+.env
+/data/*
+chat_log.jsonl
+event_log.jsonl
+data/*
+.env.example
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.zip
+*.log
