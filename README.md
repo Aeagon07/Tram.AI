@@ -1,16 +1,16 @@
-# aumis_ui
+# Navonmesh'26
 
-A new Flutter project.
+## PS-26005 - Intelligent Commute Planning/Management
 
-## Getting Started
+## 🚨 Problem Overview
 
-This project is a starting point for a Flutter application.
+India's urban centers are experiencing an unprecedented **mobility crisis**. Cities like **Bengaluru, Mumbai, Delhi, and Pune** witness daily economic losses exceeding **₹3,700 crore** due to traffic congestion alone.
 
-A few resources to get you started if this is your first Flutter project:
+The root cause is systemic:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- 🔀 **Fragmented transport infrastructure** — no unified system across modes
+- 📊 **Static route optimization** — unable to adapt to real-time conditions
+- ⚡ **Absence of real-time adaptive coordination** — no dynamic rerouting or load balancing
+- 🔗 **Zero cross-modal integration** — buses, metro, auto-rickshaws, ride-shares, and private vehicles operate in silos
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This results in millions of commuters losing productive hours daily, skyrocketing fuel consumption, and a compounding environmental burden on already-stressed urban ecosystems.
