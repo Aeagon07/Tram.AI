@@ -4,18 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, MapPin, Zap, Shield, X, Play } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import EarthGlobe from "./EarthGlobe";
+import IndiaMap3D from "./IndiaMap3D";
 import Image from "next/image";
 
 export default function Hero() {
     const [selectedCity, setSelectedCity] = useState<string | null>(null);
-
-    const cityFootage: Record<string, string> = {
-        'Pune': '/assets/footage/pune.png',
-        'Bengaluru': '/assets/footage/bengaluru.png',
-        'Mumbai': '/assets/footage/pune.png',
-        'Delhi': '/assets/footage/bengaluru.png',
-    };
 
     return (
         <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-white">
@@ -48,7 +41,7 @@ export default function Hero() {
                         >
                             Intelligent Commute <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-500">
-                                For Modern Cities
+                                For Pune City
                             </span>
                         </motion.h1>
 
@@ -58,8 +51,8 @@ export default function Hero() {
                             transition={{ duration: 0.6, delay: 0.2 }}
                             className="max-w-xl text-xl text-gray-600 mb-10 leading-relaxed"
                         >
-                            Tram AI uses real-time multi-modal data to optimize your urban commute,
-                            reduce congestion, and handle incidents with precision.
+                            Tram AI uses real-time multi-modal data to optimize urban mobility,
+                            reduce congestion, and handle incidents across Pune with AI precision.
                         </motion.p>
 
                         <motion.div
@@ -72,14 +65,15 @@ export default function Hero() {
                                 href="/dashboard"
                                 className="px-8 py-4 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-all duration-200 shadow-xl hover:shadow-2xl flex items-center space-x-2 transform hover:-translate-y-1"
                             >
-                                <span>Explore Dashboard</span>
+                                <span>Explore Management Console</span>
                                 <ArrowRight className="w-5 h-5" />
                             </Link>
                             <button
                                 onClick={() => setSelectedCity('Pune')}
                                 className="px-8 py-4 bg-white text-gray-900 border border-gray-200 font-bold rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm flex items-center space-x-2"
                             >
-                                Watch Pune Live
+                                <Play className="w-4 h-4 text-green-600 fill-green-600" />
+                                <span>Watch Pune Live</span>
                             </button>
                         </motion.div>
                     </div>
@@ -90,7 +84,7 @@ export default function Hero() {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="relative"
                     >
-                        <EarthGlobe onCitySelect={(city) => setSelectedCity(city)} />
+                        <IndiaMap3D onPuneSelect={() => setSelectedCity('Pune')} />
                     </motion.div>
                 </div>
 
@@ -99,22 +93,22 @@ export default function Hero() {
                     {[
                         {
                             icon: MapPin,
-                            title: "Multi-Modal Routing",
-                            desc: "Seamlessly switch between Metro, Bus, and Private transport.",
+                            title: "Pune-Wide Coverage",
+                            desc: "Comprehensive monitoring across major arterial roads and intersections.",
                             color: "text-blue-600",
                             bg: "bg-blue-50"
                         },
                         {
                             icon: Zap,
-                            title: "Real-time Optimization",
-                            desc: "Dynamic rerouting based on live traffic and incident data.",
+                            title: "AI Optimization",
+                            desc: "Dynamic rerouting based on live Pune traffic and incident reports.",
                             color: "text-amber-600",
                             bg: "bg-amber-50"
                         },
                         {
                             icon: Shield,
-                            title: "Incident SOS",
-                            desc: "Direct coordination with traffic police for faster response.",
+                            title: "Emergency Response",
+                            desc: "Direct coordination with Pune Traffic Police for faster incident recovery.",
                             color: "text-red-600",
                             bg: "bg-red-50"
                         }
@@ -160,10 +154,11 @@ export default function Hero() {
 
                             <div className="relative aspect-video bg-gray-900">
                                 <Image
-                                    src={cityFootage[selectedCity] || '/assets/footage/pune.png'}
-                                    alt={`${selectedCity} Traffic`}
+                                    src="/assets/footage/pune.png"
+                                    alt="Pune Traffic Live"
                                     fill
                                     className="object-cover opacity-80"
+                                    priority
                                 />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/40">
@@ -176,14 +171,14 @@ export default function Hero() {
                                         LIVE FEED
                                     </div>
                                     <div className="px-3 py-1 bg-black/50 text-white text-[10px] font-bold rounded uppercase tracking-widest backdrop-blur-md">
-                                        {selectedCity} NODE: TR-LIVE
+                                        PUNE NODE: PN-LIVE-01
                                     </div>
                                 </div>
                                 <div className="absolute bottom-6 left-6 right-6">
                                     <div>
-                                        <h2 className="text-2xl font-bold text-white mb-2">{selectedCity} Central Hub</h2>
+                                        <h2 className="text-2xl font-bold text-white mb-2">Pune City Traffic</h2>
                                         <p className="text-white/70 text-sm max-w-md italic">
-                                            Real-time AI analysis of urban traffic density.
+                                            Real-time AI analysis of urban traffic density in central Pune.
                                         </p>
                                     </div>
                                 </div>
@@ -197,15 +192,15 @@ export default function Hero() {
                                     </div>
                                     <div>
                                         <p className="text-gray-400 text-[10px] uppercase font-bold tracking-widest mb-1">AI Status</p>
-                                        <p className="text-green-600 font-bold">Active</p>
+                                        <p className="text-green-600 font-bold">Predicting</p>
                                     </div>
                                 </div>
                                 <Link
                                     href="/dashboard"
                                     onClick={() => setSelectedCity(null)}
-                                    className="px-6 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-all flex items-center space-x-2"
+                                    className="px-6 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-all flex items-center space-x-2 shadow-lg shadow-green-200"
                                 >
-                                    <span>Go to Management Console</span>
+                                    <span>Go to Console</span>
                                     <ArrowRight className="w-4 h-4" />
                                 </Link>
                             </div>
