@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -39,3 +40,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+=======
+__pycache__
+.idea
+./venv
+.env
+/data/*
+chat_log.jsonl
+event_log.jsonl
+data/*
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.zip
+*.log
+>>>>>>> origin/feature/final-backend-push
