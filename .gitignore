@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Miscellaneous
 *.class
 *.log
@@ -43,3 +44,63 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+=======
+<<<<<<< HEAD
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+=======
+__pycache__
+.idea
+./venv
+.env
+/data/*
+chat_log.jsonl
+event_log.jsonl
+data/*
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.zip
+*.log
+>>>>>>> origin/feature/final-backend-push
+>>>>>>> 06c034fb7b9a61c6aac1e3b8dfe8a98e6d362196

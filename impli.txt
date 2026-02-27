@@ -1,0 +1,443 @@
+🚀 AUMIS – Complete UI Integration Blueprint (Next.js)
+
+Stack:
+
+Next.js (App Router)
+
+TypeScript
+
+Tailwind CSS
+
+Framer Motion
+
+shadcn/ui (optional base components)
+
+1️⃣ Project Structure (Production-Ready)
+app/
+ ├── layout.tsx
+ ├── page.tsx                 (Home)
+ ├── routes/page.tsx          (Route Comparison)
+ ├── sustainability/page.tsx
+ ├── alerts/page.tsx
+ ├── profile/page.tsx
+
+components/
+ ├── layout/
+ │     ├── floating-navbar.tsx
+ │     ├── header.tsx
+ │
+ ├── ui/
+ │     ├── glass-card.tsx
+ │     ├── animated-button.tsx
+ │     ├── eco-badge.tsx
+ │     ├── congestion-badge.tsx
+ │     ├── segmented-control.tsx
+ │
+ ├── home/
+ │     ├── search-bar.tsx
+ │     ├── location-input.tsx
+ │     ├── featured-route.tsx
+ │
+ ├── routes/
+ │     ├── route-card.tsx
+ │     ├── route-timeline.tsx
+ │
+ ├── sustainability/
+ │     ├── eco-progress.tsx
+ │     ├── stat-counter.tsx
+ │
+lib/
+ ├── mock-data.ts
+ ├── constants.ts
+ ├── animation-config.ts
+
+This keeps everything modular.
+
+2️⃣ Global Layout
+layout.tsx
+
+Wrap everything in:
+
+Gradient background
+
+Fixed floating navbar
+
+Page transition animation wrapper
+
+Structure:
+
+<GradientBackground>
+  <Header />
+  <AnimatedPageWrapper>
+     {children}
+  </AnimatedPageWrapper>
+  <FloatingNavbar />
+</GradientBackground>
+3️⃣ Design System
+🎨 Color Tokens (Tailwind Config)
+
+Primary: Urban Blue
+Eco: Green
+Alert: Red
+Background: Dark graphite
+
+Use CSS variables:
+
+--primary
+--eco
+--alert
+--glass-bg
+--glass-border
+🧊 GlassCard Component
+
+Reusable everywhere.
+
+Features:
+
+backdrop-blur-xl
+
+bg-white/5
+
+border border-white/10
+
+rounded-2xl
+
+hover:scale-[1.02]
+
+shadow-xl
+
+Add motion wrapper:
+
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.4 }}
+>
+4️⃣ Pages – Full Flow
+🏠 HOME PAGE
+
+Purpose:
+User inputs route.
+
+Sections:
+1. Hero Section
+
+Greeting
+
+Location chip
+
+Subtle animated gradient
+
+Small tagline:
+“Smart. Sustainable. Adaptive.”
+
+2. Route Input Section
+
+Inside GlassCard:
+
+Source input
+
+Destination input
+
+Time bound segmented control:
+
+Urgent
+
+Moderate
+
+Flexible
+
+Segmented Control:
+
+Active pill animation
+
+Smooth sliding indicator
+
+3. Smart Suggestions Section
+
+Mock:
+
+“Avoid peak traffic between 5–7 PM”
+
+“Metro recommended today”
+
+Animated fade-in cards.
+
+4. Featured Map Preview
+
+Static placeholder map container:
+
+Traffic heat colors
+
+Congestion legend
+
+Mini overlay badges
+
+(Backend later.)
+
+🚦 ROUTE COMPARISON PAGE
+
+This is your strongest page.
+
+Layout:
+
+Vertical stack of animated route cards.
+
+RouteCard Component
+
+Displays:
+
+Mode Icon
+
+Mode Name
+
+Travel Time
+
+Cost
+
+Fuel
+
+CO₂
+
+Congestion Badge
+
+Eco Badge
+
+Recommended Tag (conditional mock)
+
+Expandable:
+
+Click → expands with animation
+Shows breakdown:
+
+Base fare
+
+Fuel estimate
+
+Surge indicator
+
+System impact note
+
+Animation Strategy
+
+Staggered load:
+
+<motion.div variants={container}>
+   {routes.map(route => (
+      <motion.div variants={item}>
+
+Delay each by 0.1s.
+
+Feels premium.
+
+🌍 SUSTAINABILITY PAGE
+
+Differentiation page.
+
+Top Section
+
+Eco Score (big number)
+Circular progress animation.
+
+Monthly Stats
+
+Animated counters:
+
+CO₂ Saved
+
+Fuel Saved
+
+Public Transport Usage %
+
+Count up animation from 0.
+
+Achievement Section
+
+Badge grid:
+
+Eco Commuter
+
+Peak Avoider
+
+Smart Planner
+
+Hover glow animation.
+
+⚠ ALERTS PAGE
+
+Mock real-time alerts.
+
+Card type:
+
+Accident detected
+
+Route overload
+
+Suggested alternate path
+
+Slide-in notification animation.
+
+👤 PROFILE PAGE
+
+Minimal:
+
+User name
+
+Preferred transport
+
+Saved routes
+
+Dark/light toggle
+
+Keep simple.
+
+5️⃣ Floating Navbar
+
+Fixed bottom center.
+
+Glass container:
+
+Tabs:
+
+Home
+
+Routes
+
+Sustainability
+
+Alerts
+
+Profile
+
+Active tab:
+
+Animated underline
+
+Slight scale
+
+Use Framer Motion layout animations.
+
+6️⃣ Animation System
+
+Use one animation config file:
+
+export const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+}
+
+Use consistent duration: 0.3–0.5s
+
+Avoid over-animation.
+
+Premium apps are subtle.
+
+7️⃣ Mock Data Layer
+
+Create mock-data.ts:
+
+export const routes = [
+ {
+   mode: "Metro",
+   time: "28 min",
+   cost: "₹40",
+   congestion: "Low",
+   ecoScore: 92,
+   recommended: true
+ }
+]
+
+Later replace with API.
+
+UI remains same.
+
+8️⃣ Responsive Strategy (Important for APK)
+
+Design mobile-first.
+
+Breakpoints:
+
+Default: mobile
+
+md: tablet
+
+lg: desktop
+
+Capacitor will use mobile layout.
+
+Test in:
+
+Chrome dev tools → device mode.
+
+9️⃣ Performance Best Practices
+
+Use next/image
+
+Use memoization for route cards
+
+Lazy load heavy components
+
+Avoid heavy shadows on mobile
+
+Use transform animations only
+
+Keep 60 FPS smooth.
+
+🔟 Capacitor Readiness
+
+After UI done:
+
+Add PWA config
+
+Static export
+
+Install Capacitor
+
+Wrap project
+
+Generate APK
+
+No UI changes needed.
+
+🔥 What Makes This Edge From Others?
+
+✔ Glass + motion system
+✔ Sustainability gamification
+✔ Intelligent-feel recommendation badges
+✔ Clean component architecture
+✔ Animation consistency
+✔ System-level design language
+
+Most teams:
+
+Build basic forms
+
+Use default UI
+
+No motion system
+
+No design consistency
+
+You:
+
+Build product-level interface.
+
+🎯 Development Order
+
+Setup project + theme
+
+Build GlassCard
+
+Build Navbar
+
+Build Home Page
+
+Build Route Page
+
+Build Sustainability Page
+
+Polish animations
+
+Mobile responsiveness
+
+Test performance
