@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Commute — Pune</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:      #07101e;
+      --surface: #0d1a2d;
+      --card:    #111f33;
+      --border:  rgba(255,255,255,0.07);
+      --text:    #dce8f5;
+      --muted:   #7a90a8;
+      --green:   #10b981;
+      --yellow:  #f59e0b;
+      --red:     #ef4444;
+      --blue:    #38bdf8;
+      --purple:  #a78bfa;
+      --accent:  #00e0ff;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; font-family:'DM Sans', sans-serif; background:var(--bg); color:var(--text); overflow:hidden; }
+
+    /* ── Layout ── */
+    #app { display:grid; grid-template-columns:360px 1fr; height:100vh; }
+
+    /* ── Sidebar ── */
+    #sidebar {
+      background:var(--surface);
+      border-right:1px solid var(--border);
+      display:flex; flex-direction:column;
+      overflow:hidden;
+    }
+    #sidebar-header {
+      padding:18px 20px 14px;
+      border-bottom:1px solid var(--border);
+      background:var(--bg);
+    }
+    #sidebar-header .badge {
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+      color:var(--green); background:rgba(16,185,129,.12);
+      border:1px solid rgba(16,185,129,.25);
+      padding:3px 10px; border-radius:20px; margin-bottom:8px;
+    }
+    #sidebar-header .pulse { width:6px; height:6px; background:var(--green); border-radius:50%; animation:pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+    #sidebar-header h1 { font-size:17px; font-weight:800; color:#fff; line-height:1.2; }
+    #sidebar-header p  { font-size:11px; color:var(--muted); margin-top:3px; }
+
+    #sidebar-body { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:14px; }
+    #sidebar-body::-webkit-scrollbar { width:4px; }
+    #sidebar-body::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+    /* ── Form ── */
+    .section-label { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+
+    .input-wrap { position:relative; }
+    .input-wrap .dot { position:absolute; left:12px; top:50%; transform:translateY(-50%); width:8px; height:8px; border-radius:50%; }
+    .input-wrap input {
+      width:100%; padding:10px 12px 10px 28px;
+      background:var(--card); border:1px solid var(--border);
+      border-radius:10px; color:var(--text); font-size:13px; font-family:inherit;
+      outline:none; transition:border-color .2s;
+    }
+    .input-wrap input:focus { border-color:rgba(0,224,255,.4); }
+    .input-wrap input::placeholder { color:var(--muted); }
+
+    /* Autocomplete dropdown */
+    .autocomplete-list {
+      position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:2000;
+      background:var(--card); border:1px solid var(--border); border-radius:10px;
+      overflow:hidden; box-shadow:0 12px 32px rgba(0,0,0,.5);
+      display:none;
+    }
+    .autocomplete-list.open { display:block; }
+    .ac-item {
+      padding:9px 14px; font-size:12px; cursor:pointer;
+      border-bottom:1px solid var(--border); transition:background .15s;
+    }
+    .ac-item:last-child { border-bottom:none; }
+    .ac-item:hover { background:rgba(255,255,255,.05); }
+    .ac-item .ac-name { font-weight:600; color:var(--text); }
+    .ac-item .ac-addr { color:var(--muted); font-size:11px; margin-top:1px; }
+
+    .connector { display:flex; align-items:center; justify-content:center; }
+    .connector-line { width:1px; height:20px; background:var(--border); }
+
+    /* ── Buttons ── */
+    .btn-row { display:flex; gap:8px; }
+    .btn {
+      flex:1; padding:11px; border-radius:10px; border:none;
+      font-size:13px; font-weight:700; font-family:inherit;
+      cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:6px;
+    }
+    .btn-primary { background:var(--green); color:#001; }
+    .btn-primary:hover { background:#0ea572; box-shadow:0 0 20px rgba(16,185,129,.3); }
+    .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+    .btn-secondary { background:rgba(255,255,255,.06); color:var(--text); border:1px solid var(--border); }
+    .btn-secondary:hover { background:rgba(255,255,255,.1); }
+
+    /* ── Route Cards ── */
+    #routes-section { display:none; flex-direction:column; gap:8px; }
+    .route-card {
+      background:var(--card); border:1.5px solid var(--border);
+      border-radius:12px; padding:12px 14px; cursor:pointer;
+      transition:all .2s; position:relative; overflow:hidden;
+    }
+    .route-card:hover { border-color:rgba(255,255,255,.15); transform:translateX(2px); }
+    .route-card.active { border-color:var(--accent); background:rgba(0,224,255,.04); }
+    .route-card.active::before {
+      content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--accent);
+    }
+    .route-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+    .route-tag {
+      font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+      padding:3px 8px; border-radius:6px;
+    }
+    .tag-fastest  { background:rgba(56,189,248,.15); color:var(--blue); border:1px solid rgba(56,189,248,.3); }
+    .tag-balanced { background:rgba(16,185,129,.15); color:var(--green); border:1px solid rgba(16,185,129,.3); }
+    .tag-scenic   { background:rgba(167,139,250,.15); color:var(--purple); border:1px solid rgba(167,139,250,.3); }
+
+    .route-meta { display:flex; gap:14px; }
+    .route-stat { display:flex; flex-direction:column; }
+    .route-stat .val { font-size:16px; font-weight:800; color:#fff; }
+    .route-stat .lbl { font-size:10px; color:var(--muted); }
+
+    .route-factors { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+    .factor-chip {
+      font-size:10px; padding:3px 8px; border-radius:6px; font-weight:600;
+      display:flex; align-items:center; gap:4px;
+    }
+    .chip-signal  { background:rgba(239,68,68,.12);  color:#fca5a5; }
+    .chip-bus     { background:rgba(245,158,11,.12); color:#fde68a; }
+    .chip-congestion-low  { background:rgba(16,185,129,.12); color:#6ee7b7; }
+    .chip-congestion-med  { background:rgba(245,158,11,.12); color:#fde68a; }
+    .chip-congestion-high { background:rgba(239,68,68,.12);  color:#fca5a5; }
+    .chip-toll    { background:rgba(167,139,250,.12); color:#c4b5fd; }
+
+    /* ── Info panels ── */
+    .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .info-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:10px; padding:10px 12px;
+    }
+    .info-card .ic-label { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+    .info-card .ic-value { font-size:15px; font-weight:800; color:#fff; }
+    .info-card .ic-sub   { font-size:10px; color:var(--muted); margin-top:1px; }
+
+    /* congestion meter */
+    .cong-bar { height:6px; border-radius:3px; background:rgba(255,255,255,.08); margin-top:6px; overflow:hidden; }
+    .cong-fill { height:100%; border-radius:3px; transition:width .6s ease; }
+
+    /* ── Status bar ── */
+    #status {
+      padding:10px 14px;
+      font-size:11px; color:var(--muted);
+      border-top:1px solid var(--border);
+      background:var(--bg);
+      display:flex; align-items:center; gap:6px;
+      min-height:36px;
+    }
+    #status .spin {
+      width:12px; height:12px; border-radius:50%;
+      border:2px solid rgba(0,224,255,.2); border-top-color:var(--accent);
+      animation:spin .8s linear infinite; display:none;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* ── Map ── */
+    #map-wrap { position:relative; }
+    #map { width:100%; height:100%; }
+
+    /* Map overlay legend */
+    #map-legend {
+      position:absolute; bottom:16px; left:16px; z-index:900;
+      background:rgba(7,16,30,.85); backdrop-filter:blur(8px);
+      border:1px solid var(--border); border-radius:10px; padding:10px 12px;
+      font-size:11px; color:var(--muted); min-width:160px;
+    }
+    #map-legend .leg-title { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+    .leg-row { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+    .leg-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+    .leg-line { width:24px; height:3px; border-radius:2px; flex-shrink:0; }
+
+    /* Marker tooltip override */
+    .leaflet-tooltip {
+      background:var(--card) !important; border:1px solid var(--border) !important;
+      color:var(--text) !important; font-size:11px !important; font-family:'DM Sans',sans-serif !important;
+      border-radius:6px !important; box-shadow:0 4px 12px rgba(0,0,0,.4) !important;
+    }
+    .leaflet-tooltip-top::before { border-top-color:var(--border) !important; }
+
+    /* Empty state */
+    #empty-state { padding:20px 0; text-align:center; color:var(--muted); font-size:12px; }
+    #empty-state .es-icon { font-size:28px; margin-bottom:8px; }
+
+    /* Error */
+    .error-msg { background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.25); color:#fca5a5; font-size:12px; padding:10px 12px; border-radius:8px; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── SIDEBAR ── -->
+  <div id="sidebar">
+    <div id="sidebar-header">
+      <div class="badge"><span class="pulse"></span> Live · Pune OSM</div>
+      <h1>Smart Commute Planner</h1>
+      <p>OSRM routing · Overpass signals · Nominatim geocoding</p>
+    </div>
+
+    <div id="sidebar-body">
+
+      <!-- Origin -->
+      <div>
+        <div class="section-label">From</div>
+        <div class="input-wrap" id="origin-wrap">
+          <span class="dot" style="background:#10b981"></span>
+          <input type="text" id="origin" placeholder="e.g. Shivajinagar, Pune" autocomplete="off" />
+          <div class="autocomplete-list" id="origin-ac"></div>
+        </div>
+      </div>
+
+      <div class="connector"><div class="connector-line"></div></div>
+
+      <!-- Destination -->
+      <div>
+        <div class="section-label">To</div>
+        <div class="input-wrap" id="dest-wrap">
+          <span class="dot" style="background:#ef4444"></span>
+          <input type="text" id="destination" placeholder="e.g. Hinjewadi IT Park" autocomplete="off" />
+          <div class="autocomplete-list" id="dest-ac"></div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="btn-row">
+        <button class="btn btn-primary" id="planBtn" onclick="planRoute()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12h18M13 6l6 6-6 6"/></svg>
+          Plan Route
+        </button>
+        <button class="btn btn-secondary" id="clearBtn" onclick="clearAll()">Clear</button>
+      </div>
+
+      <!-- Error -->
+      <div id="error-msg" class="error-msg" style="display:none"></div>
+
+      <!-- Empty state -->
+      <div id="empty-state">
+        <div class="es-icon">🗺️</div>
+        <div>Enter origin & destination to see<br>route options with traffic insights</div>
+      </div>
+
+      <!-- Routes section -->
+      <div id="routes-section">
+        <div class="section-label" id="routes-label">Route Options</div>
+        <div id="route-cards"></div>
+      </div>
+
+      <!-- Stats -->
+      <div id="stats-section" style="display:none">
+        <div class="section-label">Route Intelligence</div>
+        <div class="info-grid" id="info-grid"></div>
+      </div>
+
+      <!-- Bus stops toggle -->
+      <div id="bus-toggle-row" style="display:none">
+        <div class="section-label">Overlays</div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="busBtn" onclick="toggleBusStops()">
+            <span id="busIcon">🚌</span> <span id="busLabel">Show Bus Stops</span>
+          </button>
+          <button class="btn btn-secondary" id="signalBtn" onclick="toggleSignals()">
+            <span id="signalIcon">🚦</span> <span id="signalLabel">Show Signals</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="status">
+      <div class="spin" id="spin"></div>
+      <span id="status-text">Ready — enter your route above</span>
+    </div>
+  </div>
+
+  <!-- ── MAP ── -->
+  <div id="map-wrap">
+    <div id="map"></div>
+    <div id="map-legend">
+      <div class="leg-title">Map Legend</div>
+      <div class="leg-row"><div class="leg-line" style="background:#38bdf8"></div><span>Fastest route</span></div>
+      <div class="leg-row"><div class="leg-line" style="background:#10b981"></div><span>Balanced route</span></div>
+      <div class="leg-row"><div class="leg-line" style="background:#a78bfa"></div><span>Scenic / Alt route</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#ff4444"></div><span>Traffic signals</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#ffd166"></div><span>Bus stops</span></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  BOOTSTRAP — load Leaflet CSS + JS, then init
+// ═══════════════════════════════════════════════════════
+(function bootstrap() {
+  // Inject Leaflet CSS
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+  document.head.appendChild(link);
+
+  // Inject Leaflet JS, then run app once loaded
+  const script = document.createElement('script');
+  script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+  script.onload = initApp;
+  script.onerror = () => { document.body.innerHTML = '<p style="color:red;padding:20px">Failed to load Leaflet. Check your internet connection.</p>'; };
+  document.head.appendChild(script);
+})();
+
+function initApp() {
+
+// ═══════════════════════════════════════════════════════
+//  MAP INIT
+// ═══════════════════════════════════════════════════════
+const map = L.map('map', { center: [18.5204, 73.8567], zoom: 13, preferCanvas: true, zoomControl: true });
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; OpenStreetMap &copy; CartoDB',
+  maxZoom: 19, subdomains: 'abcd'
+}).addTo(map);
+
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+let routeLayers   = [];
+let markerLayers  = [];
+let signalLayer   = null;
+let busLayer      = null;
+let signalData    = [];
+let busData       = [];
+let showingSignals = false;
+let showingBus     = false;
+let activeRouteIdx = 0;
+let lastRoutes     = [];
+let acTimers       = {};
+
+const ROUTE_STYLES = [
+  { color: '#38bdf8', weight: 7, label: 'Fastest',  tag: 'tag-fastest',  icon: '⚡' },
+  { color: '#10b981', weight: 5, label: 'Balanced', tag: 'tag-balanced', icon: '⚖️' },
+  { color: '#a78bfa', weight: 5, label: 'Scenic',   tag: 'tag-scenic',   icon: '🌿' },
+];
+
+// ═══════════════════════════════════════════════════════
+//  STATUS
+// ═══════════════════════════════════════════════════════
+function setStatus(msg, loading = false) {
+  document.getElementById('status-text').textContent = msg;
+  document.getElementById('spin').style.display = loading ? 'block' : 'none';
+}
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = msg; el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 6000);
+}
+
+// ═══════════════════════════════════════════════════════
+//  AUTOCOMPLETE — Nominatim
+// ═══════════════════════════════════════════════════════
+function setupAutocomplete(inputId, dropdownId) {
+  const input = document.getElementById(inputId);
+  const drop  = document.getElementById(dropdownId);
+
+  input.addEventListener('input', () => {
+    clearTimeout(acTimers[inputId]);
+    const q = input.value.trim();
+    if (q.length < 3) { drop.classList.remove('open'); return; }
+    acTimers[inputId] = setTimeout(() => fetchSuggestions(q, drop, input), 350);
+  });
+
+  input.addEventListener('blur', () => {
+    setTimeout(() => drop.classList.remove('open'), 200);
+  });
+}
+
+async function fetchSuggestions(q, drop, input) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q + ' Pune India')}&limit=5&addressdetails=1&bounded=1&viewbox=73.72,18.40,73.99,18.65`;
+    const res  = await fetch(url, { headers: { 'Accept-Language': 'en', 'User-Agent': 'SmartCommutePune/1.0' } });
+    const data = await res.json();
+
+    drop.innerHTML = '';
+    if (!data.length) { drop.classList.remove('open'); return; }
+
+    data.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'ac-item';
+      const name = item.namedetails?.name || item.display_name.split(',')[0];
+      const addr = item.display_name.split(',').slice(1, 3).join(',').trim();
+      div.innerHTML = `<div class="ac-name">${name}</div><div class="ac-addr">${addr}</div>`;
+      div.addEventListener('mousedown', () => {
+        input.value = name;
+        input.dataset.lat = item.lat;
+        input.dataset.lon = item.lon;
+        drop.classList.remove('open');
+      });
+      drop.appendChild(div);
+    });
+    drop.classList.add('open');
+  } catch (e) { drop.classList.remove('open'); }
+}
+
+setupAutocomplete('origin', 'origin-ac');
+setupAutocomplete('destination', 'dest-ac');
+
+// ═══════════════════════════════════════════════════════
+//  GEOCODE
+// ═══════════════════════════════════════════════════════
+async function geocode(query) {
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ' Pune India')}&limit=1&addressdetails=1`;
+  const res  = await fetch(url, { headers: { 'Accept-Language': 'en', 'User-Agent': 'SmartCommutePune/1.0' } });
+  const data = await res.json();
+  if (!data.length) return null;
+  return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), name: data[0].display_name };
+}
+
+// ═══════════════════════════════════════════════════════
+//  OSRM ROUTING  (multiple alternatives)
+// ═══════════════════════════════════════════════════════
+async function fetchRoutes(oLat, oLon, dLat, dLon) {
+  const url = `https://router.project-osrm.org/route/v1/driving/${oLon},${oLat};${dLon},${dLat}?overview=full&geometries=geojson&alternatives=true&steps=false&annotations=false`;
+  const res  = await fetch(url);
+  if (!res.ok) throw new Error('OSRM error ' + res.status);
+  const json = await res.json();
+  if (!json.routes?.length) throw new Error('No routes found');
+  return json.routes; // array of route objects
+}
+
+// ═══════════════════════════════════════════════════════
+//  OVERPASS — signals & bus stops along bbox
+// ═══════════════════════════════════════════════════════
+function routeBBox(coords, pad = 0.005) {
+  let minLat = Infinity, maxLat = -Infinity, minLon = Infinity, maxLon = -Infinity;
+  coords.forEach(([lat, lon]) => {
+    if (lat < minLat) minLat = lat; if (lat > maxLat) maxLat = lat;
+    if (lon < minLon) minLon = lon; if (lon > maxLon) maxLon = lon;
+  });
+  return `${(minLat - pad).toFixed(5)},${(minLon - pad).toFixed(5)},${(maxLat + pad).toFixed(5)},${(maxLon + pad).toFixed(5)}`;
+}
+
+async function fetchOverpassNodes(bbox) {
+  const query = `[out:json][timeout:20];(node["highway"="traffic_signals"](${bbox});node["highway"="bus_stop"](${bbox}););out body;`;
+  const endpoints = [
+    'https://overpass-api.de/api/interpreter',
+    'https://lz4.overpass-api.de/api/interpreter',
+    'https://overpass.kumi.systems/api/interpreter'
+  ];
+  for (const url of endpoints) {
+    try {
+      const ctrl = new AbortController();
+      const tid  = setTimeout(() => ctrl.abort(), 12000);
+      const res  = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'data=' + encodeURIComponent(query),
+        signal: ctrl.signal
+      });
+      clearTimeout(tid);
+      if (!res.ok) continue;
+      const text = await res.text();
+      return JSON.parse(text);
+    } catch (e) { continue; }
+  }
+  return { elements: [] };
+}
+
+// ═══════════════════════════════════════════════════════
+//  HAVERSINE
+// ═══════════════════════════════════════════════════════
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371, r = Math.PI / 180;
+  const dLat = (lat2 - lat1) * r, dLon = (lon2 - lon1) * r;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*r)*Math.cos(lat2*r)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// ═══════════════════════════════════════════════════════
+//  SAMPLE POLYLINE
+// ═══════════════════════════════════════════════════════
+function samplePolyline(coords, n) {
+  if (coords.length <= n) return coords;
+  const step = Math.floor(coords.length / n);
+  return Array.from({ length: n }, (_, i) => coords[i * step]);
+}
+
+// ═══════════════════════════════════════════════════════
+//  SCORE ROUTE — congestion heuristic
+// ═══════════════════════════════════════════════════════
+function scoreRoute(routeCoords, signals, distKm) {
+  const samples = samplePolyline(routeCoords, Math.min(40, routeCoords.length));
+  let sigCount = 0, busCount = 0;
+  signals.forEach(s => {
+    const close = samples.some(([lat, lon]) => haversine(lat, lon, s.lat, s.lon) < 0.1);
+    if (close) {
+      if (s.type === 'signal') sigCount++;
+      else busCount++;
+    }
+  });
+  const sigPerKm = sigCount / Math.max(0.1, distKm);
+  let congestion, congClass;
+  if (sigPerKm < 1.5) { congestion = 'Low';  congClass = 'chip-congestion-low'; }
+  else if (sigPerKm < 3.5) { congestion = 'Med';  congClass = 'chip-congestion-med'; }
+  else                     { congestion = 'High'; congClass = 'chip-congestion-high'; }
+  return { sigCount, busCount, sigPerKm: sigPerKm.toFixed(1), congestion, congClass };
+}
+
+// ═══════════════════════════════════════════════════════
+//  RENDER ROUTE CARDS
+// ═══════════════════════════════════════════════════════
+function renderRouteCards(routes, scores) {
+  const container = document.getElementById('route-cards');
+  container.innerHTML = '';
+
+  routes.forEach((route, i) => {
+    const style  = ROUTE_STYLES[i] || ROUTE_STYLES[2];
+    const score  = scores[i];
+    const distKm = (route.distance / 1000).toFixed(1);
+    const durMin = Math.round(route.duration / 60);
+    const hrs    = Math.floor(durMin / 60);
+    const mins   = durMin % 60;
+    const durStr = hrs > 0 ? `${hrs}h ${mins}m` : `${durMin} min`;
+
+    const card = document.createElement('div');
+    card.className = 'route-card' + (i === 0 ? ' active' : '');
+    card.innerHTML = `
+      <div class="route-card-header">
+        <span class="route-tag ${style.tag}">${style.icon} ${style.label}</span>
+        ${i === 0 ? '<span style="font-size:10px;color:var(--accent);font-weight:700">● Selected</span>' : ''}
+      </div>
+      <div class="route-meta">
+        <div class="route-stat"><span class="val">${distKm} km</span><span class="lbl">Distance</span></div>
+        <div class="route-stat"><span class="val">${durStr}</span><span class="lbl">Est. time</span></div>
+        <div class="route-stat"><span class="val">${score.sigCount}</span><span class="lbl">Signals</span></div>
+      </div>
+      <div class="route-factors">
+        <span class="factor-chip ${score.congClass}">🚦 ${score.congestion} congestion</span>
+        <span class="factor-chip chip-signal">⚡ ${score.sigPerKm}/km</span>
+        ${score.busCount > 0 ? `<span class="factor-chip chip-bus">🚌 ${score.busCount} bus stops</span>` : ''}
+        ${i === 0 && parseFloat(score.sigPerKm) < 1.5 ? '<span class="factor-chip chip-congestion-low">✓ Recommended</span>' : ''}
+      </div>`;
+    card.addEventListener('click', () => selectRoute(i));
+    container.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  SELECT ROUTE
+// ═══════════════════════════════════════════════════════
+function selectRoute(idx) {
+  activeRouteIdx = idx;
+  document.querySelectorAll('.route-card').forEach((c, i) => {
+    c.classList.toggle('active', i === idx);
+    const sel = c.querySelector('span[style*="color:var(--accent)"]');
+    if (i === idx) {
+      if (!sel) {
+        const sp = document.createElement('span');
+        sp.style.cssText = 'font-size:10px;color:var(--accent);font-weight:700';
+        sp.textContent = '● Selected';
+        c.querySelector('.route-card-header').appendChild(sp);
+      }
+    } else {
+      if (sel) sel.remove();
+    }
+  });
+
+  // Update polyline opacities
+  routeLayers.forEach((layer, i) => {
+    layer.setStyle({ opacity: i === idx ? 0.95 : 0.2, weight: i === idx ? ROUTE_STYLES[i]?.weight + 2 : 4 });
+    if (i === idx) layer.bringToFront();
+  });
+
+  // Update info grid
+  renderInfoGrid(lastRoutes[idx], lastRoutes);
+}
+
+// ═══════════════════════════════════════════════════════
+//  INFO GRID
+// ═══════════════════════════════════════════════════════
+function renderInfoGrid(route, allRoutes) {
+  const distKm = (route.distance / 1000).toFixed(2);
+  const durMin = Math.round(route.duration / 60);
+  const speed  = ((route.distance / 1000) / (route.duration / 3600)).toFixed(0);
+  const fastest = allRoutes[0];
+  const saving  = Math.round((fastest.duration - route.duration) / 60);
+
+  document.getElementById('info-grid').innerHTML = `
+    <div class="info-card">
+      <div class="ic-label">Distance</div>
+      <div class="ic-value">${distKm} km</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">Est. Time</div>
+      <div class="ic-value">${durMin} min</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">Avg Speed</div>
+      <div class="ic-value">${speed} km/h</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">vs Slowest</div>
+      <div class="ic-value" style="color:${saving >= 0 ? 'var(--green)' : 'var(--red)'}">${saving >= 0 ? '+' : ''}${saving}m</div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  CLEAR ALL
+// ═══════════════════════════════════════════════════════
+function clearAll() {
+  routeLayers.forEach(l => map.removeLayer(l));
+  markerLayers.forEach(l => map.removeLayer(l));
+  routeLayers = []; markerLayers = [];
+
+  if (signalLayer)  { map.removeLayer(signalLayer);  signalLayer  = null; }
+  if (busLayer)     { map.removeLayer(busLayer);      busLayer     = null; }
+  signalData = []; busData = [];
+  showingSignals = false; showingBus = false;
+
+  document.getElementById('origin').value = '';
+  document.getElementById('destination').value = '';
+  document.getElementById('origin').dataset.lat = '';
+  document.getElementById('destination').dataset.lat = '';
+  document.getElementById('routes-section').style.display = 'none';
+  document.getElementById('stats-section').style.display  = 'none';
+  document.getElementById('bus-toggle-row').style.display = 'none';
+  document.getElementById('empty-state').style.display    = 'block';
+  document.getElementById('error-msg').style.display      = 'none';
+  document.getElementById('busLabel').textContent    = 'Show Bus Stops';
+  document.getElementById('signalLabel').textContent = 'Show Signals';
+  lastRoutes = [];
+  setStatus('Ready — enter your route above');
+  map.setView([18.5204, 73.8567], 13);
+}
+
+// ═══════════════════════════════════════════════════════
+//  PLAN ROUTE — main flow
+// ═══════════════════════════════════════════════════════
+async function planRoute() {
+  const originInput = document.getElementById('origin');
+  const destInput   = document.getElementById('destination');
+  const oTxt = originInput.value.trim();
+  const dTxt = destInput.value.trim();
+
+  if (!oTxt || !dTxt) { showError('Please enter both origin and destination.'); return; }
+
+  // Clear previous layers
+  routeLayers.forEach(l => map.removeLayer(l));
+  markerLayers.forEach(l => map.removeLayer(l));
+  if (signalLayer)  { map.removeLayer(signalLayer); signalLayer = null; }
+  if (busLayer)     { map.removeLayer(busLayer);    busLayer    = null; }
+  routeLayers = []; markerLayers = [];
+  showingSignals = false; showingBus = false;
+  document.getElementById('routes-section').style.display = 'none';
+  document.getElementById('stats-section').style.display  = 'none';
+  document.getElementById('bus-toggle-row').style.display = 'none';
+  document.getElementById('empty-state').style.display    = 'none';
+  document.getElementById('error-msg').style.display      = 'none';
+  document.getElementById('planBtn').disabled = true;
+
+  try {
+    // ── 1. Geocode ──────────────────────────────────────
+    setStatus('Geocoding locations…', true);
+
+    let oLat, oLon, dLat, dLon;
+
+    // Use cached coordinates from autocomplete if available
+    if (originInput.dataset.lat && parseFloat(originInput.dataset.lat)) {
+      oLat = parseFloat(originInput.dataset.lat);
+      oLon = parseFloat(originInput.dataset.lon);
+    } else {
+      const o = await geocode(oTxt);
+      if (!o) { showError(`Origin "${oTxt}" not found. Try a more specific Pune location.`); return; }
+      oLat = o.lat; oLon = o.lon;
+    }
+
+    if (destInput.dataset.lat && parseFloat(destInput.dataset.lat)) {
+      dLat = parseFloat(destInput.dataset.lat);
+      dLon = parseFloat(destInput.dataset.lon);
+    } else {
+      const d = await geocode(dTxt);
+      if (!d) { showError(`Destination "${dTxt}" not found. Try a more specific Pune location.`); return; }
+      dLat = d.lat; dLon = d.lon;
+    }
+
+    // ── 2. Routing ──────────────────────────────────────
+    setStatus('Fetching routes via OSRM…', true);
+    const routes = await fetchRoutes(oLat, oLon, dLat, dLon);
+    lastRoutes   = routes;
+
+    // ── 3. Draw all routes (dimmed), then highlight #0 ──
+    const allCoords = routes.map(r => r.geometry.coordinates.map(c => [c[1], c[0]]));
+
+    // ── 4. Overpass for signals along the primary route bbox ──
+    setStatus('Fetching traffic data along route…', true);
+    const bbox = routeBBox(allCoords[0]);
+    const osmData = await fetchOverpassNodes(bbox);
+
+    const allNodes = [];
+    osmData.elements.forEach(el => {
+      if (el.type === 'node' && el.tags) {
+        const type = el.tags.highway === 'traffic_signals' ? 'signal' : 'bus';
+        allNodes.push({ lat: el.lat, lon: el.lon, type, name: el.tags.name || (type === 'signal' ? 'Traffic Signal' : 'Bus Stop') });
+      }
+    });
+    signalData = allNodes.filter(n => n.type === 'signal');
+    busData    = allNodes.filter(n => n.type === 'bus');
+
+    // ── 5. Score each route ──────────────────────────────
+    const scores = routes.map((r, i) => {
+      const coords = allCoords[i];
+      const distKm = r.distance / 1000;
+      return scoreRoute(coords, allNodes, distKm);
+    });
+
+    // ── 6. Draw route polylines ──────────────────────────
+    routes.forEach((route, i) => {
+      const style = ROUTE_STYLES[i] || ROUTE_STYLES[2];
+      const layer = L.polyline(allCoords[i], {
+        color:   style.color,
+        weight:  i === 0 ? style.weight + 2 : 4,
+        opacity: i === 0 ? 0.95 : 0.2,
+        lineCap: 'round', lineJoin: 'round'
+      }).addTo(map);
+      routeLayers.push(layer);
+    });
+
+    // ── 7. Origin & destination markers ─────────────────
+    const greenIcon = L.divIcon({
+      html: `<div style="width:14px;height:14px;background:#10b981;border:2px solid #fff;border-radius:50%;box-shadow:0 0 8px #10b98188"></div>`,
+      iconSize: [14, 14], iconAnchor: [7, 7], className: ''
+    });
+    const redIcon = L.divIcon({
+      html: `<div style="width:14px;height:14px;background:#ef4444;border:2px solid #fff;border-radius:50%;box-shadow:0 0 8px #ef444488"></div>`,
+      iconSize: [14, 14], iconAnchor: [7, 7], className: ''
+    });
+    markerLayers.push(
+      L.marker([oLat, oLon], { icon: greenIcon }).bindTooltip('📍 ' + oTxt, { permanent: false }).addTo(map),
+      L.marker([dLat, dLon], { icon: redIcon   }).bindTooltip('🏁 ' + dTxt, { permanent: false }).addTo(map)
+    );
+
+    // ── 8. Fit map to primary route ──────────────────────
+    map.fitBounds(routeLayers[0].getBounds(), { padding: [60, 60] });
+
+    // ── 9. Render UI ─────────────────────────────────────
+    activeRouteIdx = 0;
+    renderRouteCards(routes, scores);
+    renderInfoGrid(routes[0], routes);
+
+    document.getElementById('routes-section').style.display = 'flex';
+    document.getElementById('stats-section').style.display  = 'block';
+    document.getElementById('bus-toggle-row').style.display = 'block';
+
+    const sigOnRoute = scores[0].sigCount;
+    const busOnRoute = scores[0].busCount;
+    setStatus(`✓ ${routes.length} routes found · ${sigOnRoute} signals · ${busOnRoute} bus stops along primary route`);
+
+  } catch (err) {
+    console.error(err);
+    showError('Error: ' + err.message + '. Check console for details.');
+    setStatus('Error fetching route data');
+  } finally {
+    document.getElementById('planBtn').disabled = false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  TOGGLE SIGNALS OVERLAY
+// ═══════════════════════════════════════════════════════
+function toggleSignals() {
+  if (showingSignals) {
+    if (signalLayer) { map.removeLayer(signalLayer); signalLayer = null; }
+    showingSignals = false;
+    document.getElementById('signalLabel').textContent = 'Show Signals';
+  } else {
+    signalLayer = L.layerGroup();
+    signalData.forEach(s => {
+      L.circleMarker([s.lat, s.lon], {
+        radius: 5, color: '#ff4444', fillColor: '#ff4444',
+        fillOpacity: 0.9, weight: 1.5
+      }).bindTooltip('🚦 ' + s.name).addTo(signalLayer);
+    });
+    signalLayer.addTo(map);
+    showingSignals = true;
+    document.getElementById('signalLabel').textContent = 'Hide Signals';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  TOGGLE BUS STOPS OVERLAY
+// ═══════════════════════════════════════════════════════
+function toggleBusStops() {
+  if (showingBus) {
+    if (busLayer) { map.removeLayer(busLayer); busLayer = null; }
+    showingBus = false;
+    document.getElementById('busLabel').textContent = 'Show Bus Stops';
+  } else {
+    busLayer = L.layerGroup();
+    busData.forEach(b => {
+      L.circleMarker([b.lat, b.lon], {
+        radius: 4, color: '#ffd166', fillColor: '#ffd166',
+        fillOpacity: 0.9, weight: 1.5
+      }).bindTooltip('🚌 ' + b.name).addTo(busLayer);
+    });
+    busLayer.addTo(map);
+    showingBus = true;
+    document.getElementById('busLabel').textContent = 'Hide Bus Stops';
+  }
+}
+
+// ── Enter key support ──
+document.getElementById('destination').addEventListener('keydown', e => { if (e.key === 'Enter') planRoute(); });
+document.getElementById('origin').addEventListener('keydown', e => { if (e.key === 'Enter') planRoute(); });
+
+// ── Expose functions to global scope for onclick handlers ──
+window.planRoute       = planRoute;
+window.clearAll        = clearAll;
+window.toggleBusStops  = toggleBusStops;
+window.toggleSignals   = toggleSignals;
+
+} // end initApp
+</script>
+</body>
+</html>
