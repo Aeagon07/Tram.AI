@@ -2,7 +2,6 @@
 
 ## PS-26005 - Intelligent Commute Planning/Management
 
-
 ## 🚨 Problem Overview
 
 India's urban centers are experiencing an unprecedented **mobility crisis**. Cities like **Bengaluru, Mumbai, Delhi, and Pune** witness daily economic losses exceeding **₹3,700 crore** due to traffic congestion alone.
