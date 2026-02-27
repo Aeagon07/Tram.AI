@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pune Traffic Map</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #1a1a2e;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: #e0e0e0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Top Bar ── */
+    #topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 18px;
+      background: #0d0d1a;
+      border-bottom: 1px solid #ffffff18;
+      z-index: 1000;
+      flex-shrink: 0;
+    }
+
+    #topbar .brand { display: flex; align-items: center; gap: 10px; }
+    #topbar .brand svg { opacity: 0.7; }
+    #topbar h1 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      color: #fff;
+      text-transform: uppercase;
+    }
+    #topbar .subtitle { font-size: 0.65rem; color: #666; letter-spacing: 1px; }
+
+    .topbar-stats { display: flex; gap: 12px; }
+    .stat-pill {
+      display: flex; flex-direction: column; align-items: center;
+      background: #ffffff08;
+      border: 1px solid #ffffff14;
+      border-radius: 6px;
+      padding: 4px 12px;
+      min-width: 70px;
+    }
+    .stat-pill .val { font-size: 1rem; font-weight: 700; color: #00c8ff; }
+    .stat-pill .lbl { font-size: 0.58rem; color: #666; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* loading */
+    #loading-overlay {
+      position: absolute; inset: 0; z-index: 2000;
+      background: #0d0d1a;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 16px;
+    }
+    #loading-overlay .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid #ffffff18;
+      border-top-color: #00c8ff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading-overlay p { color: #888; font-size: 0.8rem; letter-spacing: 1px; }
+    #loading-status { color: #00c8ff; font-size: 0.75rem; }
+
+    /* ── Map ── */
+    #map-wrap { flex: 1; position: relative; overflow: hidden; }
+    #map { width: 100%; height: 100%; }
+
+    /* ── Sidebar ── */
+    #sidebar {
+      position: absolute;
+      top: 10px; left: 10px;
+      z-index: 900;
+      display: flex; flex-direction: column; gap: 8px;
+      width: 200px;
+    }
+
+    .panel {
+      background: #0d0d1aee;
+      border: 1px solid #ffffff18;
+      border-radius: 8px;
+      padding: 12px 14px;
+      backdrop-filter: blur(8px);
+    }
+
+    .panel-title {
+      font-size: 0.62rem; letter-spacing: 2px;
+      text-transform: uppercase; color: #666;
+      margin-bottom: 10px;
+    }
+
+    /* Layer toggles */
+    .layer-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 8px; cursor: pointer;
+    }
+    .layer-row:last-child { margin-bottom: 0; }
+    .layer-label { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: #bbb; }
+    .layer-swatch { width: 20px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+    .layer-swatch.dot { width: 10px; height: 10px; border-radius: 50%; }
+    .layer-swatch.diamond {
+      width: 10px; height: 10px; border-radius: 2px;
+      transform: rotate(45deg); flex-shrink: 0;
+    }
+
+    /* Toggle switch */
+    .toggle { position: relative; width: 32px; height: 17px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0;
+      background: #333; border-radius: 17px;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .toggle-slider:before {
+      content: ''; position: absolute;
+      width: 13px; height: 13px;
+      left: 2px; top: 2px;
+      background: #888; border-radius: 50%;
+      transition: 0.2s;
+    }
+    .toggle input:checked + .toggle-slider { background: #00c8ff33; }
+    .toggle input:checked + .toggle-slider:before {
+      transform: translateX(15px); background: #00c8ff;
+    }
+
+    /* Legend */
+    .legend-item {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 7px; font-size: 0.72rem; color: #aaa;
+    }
+    .legend-item:last-child { margin-bottom: 0; }
+    .leg-line { width: 22px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+    .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .leg-diamond {
+      width: 10px; height: 10px; border-radius: 2px;
+      transform: rotate(45deg); flex-shrink: 0;
+    }
+
+    /* Info panel */
+    #info-panel {
+      position: absolute; bottom: 24px; right: 10px;
+      z-index: 900; width: 260px;
+      background: #0d0d1aee;
+      border: 1px solid #ffffff22;
+      border-radius: 8px; padding: 14px 16px;
+      backdrop-filter: blur(8px);
+      display: none;
+    }
+    #info-panel h4 { font-size: 0.85rem; color: #fff; margin-bottom: 8px; }
+    .info-row {
+      display: flex; justify-content: space-between;
+      font-size: 0.72rem; color: #666; margin-bottom: 5px;
+      border-bottom: 1px solid #ffffff08; padding-bottom: 5px;
+    }
+    .info-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .info-row span:last-child { color: #ddd; font-weight: 600; text-align: right; max-width: 60%; }
+    #info-close {
+      position: absolute; top: 8px; right: 10px;
+      background: none; border: none; color: #555; cursor: pointer; font-size: 1rem;
+    }
+    #info-close:hover { color: #fff; }
+
+    /* Traffic badge */
+    .badge {
+      display: inline-block; padding: 2px 7px; border-radius: 4px;
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+    .badge-high   { background: #ff444422; color: #ff7777; border: 1px solid #ff444455; }
+    .badge-medium { background: #ffaa0022; color: #ffcc44; border: 1px solid #ffaa0055; }
+    .badge-low    { background: #00ff8822; color: #44ffaa; border: 1px solid #00ff8855; }
+    .badge-signal { background: #00c8ff22; color: #00c8ff; border: 1px solid #00c8ff55; }
+    .badge-inter  { background: #aa44ff22; color: #cc88ff; border: 1px solid #aa44ff55; }
+
+    /* Popup dark style */
+    .leaflet-popup-content-wrapper {
+      background: #0d0d1af5 !important;
+      border: 1px solid #ffffff22 !important;
+      border-radius: 8px !important;
+      color: #ccc !important;
+      box-shadow: 0 4px 24px #00000088 !important;
+    }
+    .leaflet-popup-tip { background: #0d0d1af5 !important; }
+    .leaflet-popup-content { margin: 12px 14px !important; font-size: 0.76rem; line-height: 1.6; }
+    .popup-title { font-size: 0.88rem; font-weight: 700; color: #fff; margin-bottom: 5px; }
+
+    /* Zoom control dark */
+    .leaflet-control-zoom a {
+      background: #0d0d1aee !important;
+      color: #888 !important;
+      border-color: #ffffff18 !important;
+    }
+    .leaflet-control-zoom a:hover { background: #1a1a2e !important; color: #fff !important; }
+
+    /* Attribution */
+    .leaflet-control-attribution {
+      background: #0d0d1acc !important;
+      color: #444 !important;
+      font-size: 0.6rem !important;
+    }
+    .leaflet-control-attribution a { color: #666 !important; }
+
+    /* Error banner */
+    #error-banner {
+      display: none;
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+      z-index: 1500;
+      background: #ff444422; border: 1px solid #ff444455;
+      color: #ff7777; border-radius: 6px; padding: 8px 16px;
+      font-size: 0.75rem; text-align: center;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #ffffff22; border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div id="topbar">
+  <div class="brand">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00c8ff" stroke-width="1.5">
+      <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+      <path d="M2 12h20"/>
+    </svg>
+    <div>
+      <h1>Pune Traffic Network</h1>
+      <div class="subtitle">Real-time OSM Data · Interactive</div>
+    </div>
+  </div>
+  <div class="topbar-stats">
+    <div class="stat-pill">
+      <span class="val" id="stat-routes">—</span>
+      <span class="lbl">Routes</span>
+    </div>
+    <div class="stat-pill">
+      <span class="val" id="stat-signals">—</span>
+      <span class="lbl">Signals</span>
+    </div>
+    <div class="stat-pill">
+      <span class="val" id="stat-intersections">—</span>
+      <span class="lbl">Junctions</span>
+    </div>
+  </div>
+</div>
+
+<!-- Map -->
+<div id="map-wrap">
+  <div id="map"></div>
+
+  <!-- Loading -->
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <p>Loading Pune road network…</p>
+    <div id="loading-status">Connecting to OpenStreetMap…</div>
+  </div>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <!-- Layers -->
+    <div class="panel">
+      <div class="panel-title">Layers</div>
+      <div class="layer-row" onclick="toggleLayer('motorway')">
+        <div class="layer-label">
+          <div class="layer-swatch" style="background:#e8534a;"></div>
+          Highways / NHs
+        </div>
+        <label class="toggle"><input type="checkbox" id="chk-motorway" checked onchange="toggleLayer('motorway')"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="layer-row" onclick="toggleLayer('primary')">
+        <div class="layer-label">
+          <div class="layer-swatch" style="background:#f0a500;"></div>
+          Primary Roads
+        </div>
+        <label class="toggle"><input type="checkbox" id="chk-primary" checked onchange="toggleLayer('primary')"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="layer-row" onclick="toggleLayer('secondary')">
+        <div class="layer-label">
+          <div class="layer-swatch" style="background:#00c8ff;"></div>
+          Secondary Roads
+        </div>
+        <label class="toggle"><input type="checkbox" id="chk-secondary" checked onchange="toggleLayer('secondary')"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="layer-row" onclick="toggleLayer('signals')">
+        <div class="layer-label">
+          <div class="layer-swatch dot" style="background:#ff4444;"></div>
+          Traffic Signals
+        </div>
+        <label class="toggle"><input type="checkbox" id="chk-signals" checked onchange="toggleLayer('signals')"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="layer-row" onclick="toggleLayer('junctions')">
+        <div class="layer-label">
+          <div class="layer-swatch diamond" style="background:#aa44ff;"></div>
+          Major Junctions
+        </div>
+        <label class="toggle"><input type="checkbox" id="chk-junctions" checked onchange="toggleLayer('junctions')"><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="panel">
+      <div class="panel-title">Legend</div>
+      <div class="legend-item"><div class="leg-line" style="background:#e8534a;"></div>National Highway</div>
+      <div class="legend-item"><div class="leg-line" style="background:#f0a500;"></div>Primary Road</div>
+      <div class="legend-item"><div class="leg-line" style="background:#00c8ff;"></div>Secondary Road</div>
+      <div class="legend-item"><div class="leg-dot" style="background:#ff4444;border:2px solid #ff7777;"></div>High Traffic Signal</div>
+      <div class="legend-item"><div class="leg-dot" style="background:#ffcc00;border:2px solid #ffe066;"></div>Medium Signal</div>
+      <div class="legend-item"><div class="leg-dot" style="background:#00ff88;border:2px solid #44ffaa;"></div>Low Traffic Signal</div>
+      <div class="legend-item"><div class="leg-diamond" style="background:#aa44ff;border:1px solid #cc88ff;"></div>Major Junction</div>
+    </div>
+  </div>
+
+  <!-- Info Panel -->
+  <div id="info-panel">
+    <button id="info-close" onclick="closeInfo()">✕</button>
+    <h4 id="info-title"></h4>
+    <div id="info-badge"></div>
+    <div id="info-body"></div>
+  </div>
+
+  <!-- Error Banner -->
+  <div id="error-banner"></div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────
+//  MAP INIT — CartoDB Dark Matter (matches reference image exactly)
+// ─────────────────────────────────────────────────────────────────
+const map = L.map('map', {
+  center: [18.5204, 73.8567],
+  zoom: 13,
+  zoomControl: true,
+  preferCanvas: true
+});
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  subdomains: 'abcd',
+  maxZoom: 19
+}).addTo(map);
+
+// ─────────────────────────────────────────────────────────────────
+//  LAYER GROUPS
+// ─────────────────────────────────────────────────────────────────
+const layers = {
+  motorway:  L.layerGroup().addTo(map),
+  primary:   L.layerGroup().addTo(map),
+  secondary: L.layerGroup().addTo(map),
+  signals:   L.layerGroup().addTo(map),
+  junctions: L.layerGroup().addTo(map)
+};
+
+const layerVisible = { motorway: true, primary: true, secondary: true, signals: true, junctions: true };
+
+function toggleLayer(name) {
+  // sync checkbox
+  const chk = document.getElementById('chk-' + name);
+  if (chk) {
+    // if called from row click (not checkbox change), toggle checkbox
+    if (event && event.target !== chk && event.target.tagName !== 'INPUT') {
+      chk.checked = !chk.checked;
+    }
+    layerVisible[name] = chk.checked;
+  } else {
+    layerVisible[name] = !layerVisible[name];
+  }
+
+  if (layerVisible[name]) {
+    map.addLayer(layers[name]);
+  } else {
+    map.removeLayer(layers[name]);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  OVERPASS API — fetch real OSM data
+// ─────────────────────────────────────────────────────────────────
+const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+
+// Pune bounding box: south, west, north, east
+const BBOX = '18.40,73.72,18.65,73.99';
+
+function setStatus(msg) {
+  document.getElementById('loading-status').textContent = msg;
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-banner');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 6000);
+}
+
+// Build Overpass QL query
+function buildQuery() {
+  return `
+[out:json][timeout:60];
+(
+  // Motorways / National Highways
+  way["highway"~"^(motorway|motorway_link|trunk|trunk_link)$"](${BBOX});
+  // Primary roads
+  way["highway"~"^(primary|primary_link)$"](${BBOX});
+  // Secondary roads
+  way["highway"~"^(secondary|secondary_link)$"](${BBOX});
+  // Traffic signals (nodes)
+  node["highway"="traffic_signals"](${BBOX});
+  // Junctions / turning circles
+  node["highway"~"^(motorway_junction|turning_circle|mini_roundabout|roundabout)$"](${BBOX});
+  // Named junctions
+  node["junction"](${BBOX});
+);
+out body;
+>;
+out skel qt;
+`.trim();
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  STYLE CONFIG
+// ─────────────────────────────────────────────────────────────────
+const roadStyle = {
+  motorway:      { color: '#e8534a', weight: 4, opacity: 0.9 },
+  motorway_link: { color: '#e8534a', weight: 2.5, opacity: 0.8 },
+  trunk:         { color: '#e8534a', weight: 3.5, opacity: 0.9 },
+  trunk_link:    { color: '#e8534a', weight: 2, opacity: 0.8 },
+  primary:       { color: '#f0a500', weight: 3, opacity: 0.85 },
+  primary_link:  { color: '#f0a500', weight: 2, opacity: 0.75 },
+  secondary:     { color: '#00c8ff', weight: 2, opacity: 0.8 },
+  secondary_link:{ color: '#00c8ff', weight: 1.5, opacity: 0.7 }
+};
+
+function getRoadLayer(highway) {
+  if (highway.startsWith('motorway') || highway.startsWith('trunk')) return 'motorway';
+  if (highway.startsWith('primary')) return 'primary';
+  return 'secondary';
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  MARKER ICONS
+// ─────────────────────────────────────────────────────────────────
+function signalIcon(trafficLevel) {
+  const colors = {
+    high:   { fill: '#ff4444', border: '#ff8888' },
+    medium: { fill: '#ffcc00', border: '#ffe066' },
+    low:    { fill: '#00ff88', border: '#44ffaa' }
+  };
+  const c = colors[trafficLevel] || colors.medium;
+  const sz = trafficLevel === 'high' ? 10 : 8;
+  return L.divIcon({
+    className: '',
+    html: `<div style="width:${sz}px;height:${sz}px;border-radius:50%;background:${c.fill};border:2px solid ${c.border};"></div>`,
+    iconSize: [sz, sz],
+    iconAnchor: [sz/2, sz/2]
+  });
+}
+
+function junctionIcon(type) {
+  const color = type === 'motorway_junction' ? '#e8534a' : '#aa44ff';
+  return L.divIcon({
+    className: '',
+    html: `<div style="width:12px;height:12px;background:${color}33;border:2px solid ${color};border-radius:2px;transform:rotate(45deg);"></div>`,
+    iconSize: [12, 12],
+    iconAnchor: [6, 6]
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  PROCESS OSM DATA
+// ─────────────────────────────────────────────────────────────────
+function processOSMData(data) {
+  // Build node lookup
+  const nodeMap = {};
+  data.elements.forEach(el => {
+    if (el.type === 'node') nodeMap[el.id] = el;
+  });
+
+  let routeCount = 0, signalCount = 0, junctionCount = 0;
+
+  // Known high-traffic signal locations (Pune intersections by name)
+  const highTrafficNames = new Set([
+    'swargate', 'shivajinagar', 'deccan', 'katraj', 'hadapsar',
+    'viman nagar', 'baner', 'wakad', 'hinjewadi', 'kharadi',
+    'pimpri', 'chinchwad', 'aundh', 'koregaon', 'magarpatta',
+    'warje', 'kondhwa', 'kothrud', 'fc road', 'jm road'
+  ]);
+
+  function getTrafficLevel(tags) {
+    const name = (tags.name || '').toLowerCase();
+    for (const h of highTrafficNames) {
+      if (name.includes(h)) return 'high';
+    }
+    return 'medium';
+  }
+
+  data.elements.forEach(el => {
+    // ── WAYS (roads) ──
+    if (el.type === 'way' && el.tags && el.tags.highway) {
+      const hw = el.tags.highway;
+      const style = roadStyle[hw];
+      if (!style) return;
+
+      const coords = (el.nodes || [])
+        .map(nid => nodeMap[nid])
+        .filter(Boolean)
+        .map(n => [n.lat, n.lon]);
+
+      if (coords.length < 2) return;
+
+      const layerKey = getRoadLayer(hw);
+      const line = L.polyline(coords, {
+        ...style,
+        smoothFactor: 1.2,
+        lineCap: 'round',
+        lineJoin: 'round'
+      });
+
+      const name = el.tags.name || el.tags['name:en'] || el.tags.ref || hw.replace('_', ' ');
+      const ref  = el.tags.ref || '';
+      const maxspeed = el.tags.maxspeed || '—';
+      const lanes = el.tags.lanes || '—';
+      const oneway = el.tags.oneway === 'yes' ? 'Yes' : 'No';
+
+      line.bindPopup(`
+        <div class="popup-title">${name}</div>
+        <span class="badge badge-${layerKey === 'motorway' ? 'high' : layerKey === 'primary' ? 'medium' : 'low'}">${hw.replace('_', ' ')}</span>
+        <table style="width:100%;font-size:0.7rem;color:#888;margin-top:4px;border-collapse:collapse;">
+          ${ref ? `<tr><td>Ref</td><td style="color:#ddd;text-align:right">${ref}</td></tr>` : ''}
+          <tr><td>Lanes</td><td style="color:#ddd;text-align:right">${lanes}</td></tr>
+          <tr><td>Max Speed</td><td style="color:#ddd;text-align:right">${maxspeed}</td></tr>
+          <tr><td>One-way</td><td style="color:#ddd;text-align:right">${oneway}</td></tr>
+        </table>
+      `);
+
+      line.on('click', function(e) {
+        showInfoPanel(name, layerKey, [
+          ['Type', hw.replace(/_/g, ' ')],
+          ref ? ['Reference', ref] : null,
+          ['Lanes', lanes],
+          ['Max Speed', maxspeed],
+          ['One-way', oneway]
+        ].filter(Boolean));
+      });
+
+      line.addTo(layers[layerKey]);
+      routeCount++;
+    }
+
+    // ── NODES (signals & junctions) ──
+    if (el.type === 'node' && el.tags) {
+      const hw = el.tags.highway;
+      const jn = el.tags.junction;
+
+      if (hw === 'traffic_signals') {
+        const level = getTrafficLevel(el.tags);
+        const name = el.tags.name || el.tags['name:en'] || 'Traffic Signal';
+        const marker = L.marker([el.lat, el.lon], { icon: signalIcon(level) });
+
+        marker.bindPopup(`
+          <div class="popup-title">${name}</div>
+          <span class="badge badge-signal">Traffic Signal</span>
+          <div style="font-size:0.7rem;color:#888;margin-top:4px;">
+            <div>Location: <span style="color:#ddd">${el.lat.toFixed(5)}, ${el.lon.toFixed(5)}</span></div>
+            ${el.tags.crossing ? `<div>Crossing: <span style="color:#ddd">${el.tags.crossing}</span></div>` : ''}
+          </div>
+        `);
+
+        marker.on('click', function() {
+          showInfoPanel(name, 'signal', [
+            ['Type', 'Traffic Signal'],
+            ['Coordinates', `${el.lat.toFixed(4)}, ${el.lon.toFixed(4)}`],
+            el.tags.crossing ? ['Crossing', el.tags.crossing] : null
+          ].filter(Boolean));
+        });
+
+        marker.addTo(layers.signals);
+        signalCount++;
+      }
+
+      if (hw === 'motorway_junction' || hw === 'turning_circle' ||
+          hw === 'mini_roundabout' || jn) {
+        const name = el.tags.name || el.tags['name:en'] || el.tags.ref || 'Junction';
+        const marker = L.marker([el.lat, el.lon], { icon: junctionIcon(hw) });
+
+        marker.bindPopup(`
+          <div class="popup-title">${name}</div>
+          <span class="badge badge-inter">${(hw || jn || 'junction').replace(/_/g, ' ')}</span>
+          <div style="font-size:0.7rem;color:#888;margin-top:4px;">
+            ${el.tags.ref ? `<div>Ref: <span style="color:#ddd">${el.tags.ref}</span></div>` : ''}
+            <div>Coordinates: <span style="color:#ddd">${el.lat.toFixed(4)}, ${el.lon.toFixed(4)}</span></div>
+          </div>
+        `);
+
+        marker.on('click', function() {
+          showInfoPanel(name, 'junction', [
+            ['Type', (hw || jn || 'junction').replace(/_/g, ' ')],
+            el.tags.ref ? ['Reference', el.tags.ref] : null,
+            ['Coordinates', `${el.lat.toFixed(4)}, ${el.lon.toFixed(4)}`]
+          ].filter(Boolean));
+        });
+
+        marker.addTo(layers.junctions);
+        junctionCount++;
+      }
+    }
+  });
+
+  // Update stats
+  document.getElementById('stat-routes').textContent = routeCount;
+  document.getElementById('stat-signals').textContent = signalCount;
+  document.getElementById('stat-intersections').textContent = junctionCount;
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  INFO PANEL
+// ─────────────────────────────────────────────────────────────────
+function showInfoPanel(title, type, rows) {
+  document.getElementById('info-title').textContent = title;
+
+  const badgeClass = { motorway: 'high', primary: 'medium', secondary: 'low', signal: 'signal', junction: 'inter' };
+  const badgeLabel = { motorway: 'Highway', primary: 'Primary Road', secondary: 'Secondary Road', signal: 'Signal', junction: 'Junction' };
+  document.getElementById('info-badge').innerHTML =
+    `<span class="badge badge-${badgeClass[type] || 'signal'}">${badgeLabel[type] || type}</span>`;
+
+  document.getElementById('info-body').innerHTML = rows.map(([k, v]) =>
+    `<div class="info-row"><span>${k}</span><span>${v}</span></div>`
+  ).join('');
+
+  document.getElementById('info-panel').style.display = 'block';
+}
+
+function closeInfo() {
+  document.getElementById('info-panel').style.display = 'none';
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  FETCH DATA
+// ─────────────────────────────────────────────────────────────────
+async function loadData() {
+  try {
+    setStatus('Fetching road network from Overpass API…');
+
+    const query = buildQuery();
+    const response = await fetch(OVERPASS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'data=' + encodeURIComponent(query)
+    });
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    setStatus('Parsing road geometry…');
+    const data = await response.json();
+
+    setStatus('Rendering map…');
+    processOSMData(data);
+
+    // Hide loading
+    document.getElementById('loading-overlay').style.display = 'none';
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById('loading-overlay').style.display = 'none';
+    showError('Failed to load OSM data. Check your internet connection and reload.');
+
+    // Fallback: show a message on map
+    L.popup()
+      .setLatLng([18.5204, 73.8567])
+      .setContent('<div style="color:#fff">Could not load road data.<br>Please check your connection.</div>')
+      .openOn(map);
+  }
+}
+
+// Close info panel when clicking map
+map.on('click', function(e) {
+  if (!e.originalEvent.target.closest || !e.originalEvent.target.closest('.leaflet-marker-icon')) {
+    closeInfo();
+  }
+});
+
+// Start loading
+loadData();
+</script>
+</body>
+</html>
