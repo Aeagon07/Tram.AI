@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Navonmesh'26
 
 ## PS-26005 - Intelligent Commute Planning/Management
