@@ -15,6 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
+
 # --- LOGGING CONFIGURATION ---
 logging.basicConfig(
     level=logging.INFO,
@@ -48,6 +49,26 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Try to include local routers (e.g. `routes/chat.py`). These are optional
+# and will be skipped gracefully if missing or failing to import.
+try:
+    from routes import chat as chat_router
+    app.include_router(chat_router.router)
+except Exception as e:
+    print(f"Chat router not included: {e}")
+
+try:
+    from routes import routes as routes_router
+    app.include_router(routes_router.router)
+except Exception:
+    pass
+
+try:
+    from routes import incidents as incidents_router
+    app.include_router(incidents_router.router)
+except Exception:
+    pass
 
 # --- DECISION SYSTEM CONSTANTS ---
 SYSTEM_PROMPT_DECISION = """

@@ -3,6 +3,17 @@ import { Geist, Geist_Mono, Manrope } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
 
+import Chatbot from '../components/Chatbot';
+
+function MyApp({ Component, pageProps }) {
+  return (
+    <>
+      <Component {...pageProps} />
+      <Chatbot />
+    </>
+  );
+}
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
