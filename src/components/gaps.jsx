@@ -1,17 +1,16 @@
 "use client";
 
-// import { motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 
-// export default function SystemLimitationsSection() {
-//   const fadeInUp: Variants = {
-//     hidden: { opacity: 0, y: 20 },
-//     visible: {
-//       opacity: 1,
-//       y: 0,
-//       // Framer Motion's TS types expect a cubic-bezier array (not a string like "easeOut")
-//       transition: { duration: 0.6, ease: [0, 0, 0.58, 1] },
-//     },
-//   };
+export default function SystemLimitationsSection() {
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: [0, 0, 0.58, 1] },
+    },
+  };
 
   const limitations = [
     {
