@@ -1,117 +1,132 @@
-# Navonmesh'26
+# Tram.AI
 
-## PS-26005 - Intelligent Commute Planning/Management
+> **Intelligent, AI-driven urban commute planner and traffic management platform**
 
-## 🚨 Problem Overview
+---
 
-India's urban centers are experiencing an unprecedented **mobility crisis**. Cities like **Bengaluru, Mumbai, Delhi, and Pune** witness daily economic losses exceeding **₹3,700 crore** due to traffic congestion alone.
+## 📌 Project Overview
 
-The root cause is systemic:
+Tram.AI is a full‑stack solution designed to tackle the mobility crisis in Indian cities by providing:
 
-- 🔀 **Fragmented transport infrastructure** — no unified system across modes
-- 📊 **Static route optimization** — unable to adapt to real-time conditions
-- ⚡ **Absence of real-time adaptive coordination** — no dynamic rerouting or load balancing
-- 🔗 **Zero cross-modal integration** — buses, metro, auto-rickshaws, ride-shares, and private vehicles operate in silos
+- **Real‑time adaptive route planning** across multi‑modal transport.
+- **Traffic prediction and congestion heat‑mapping** powered by machine learning.
+- **Admin console** for transport authorities and event venues.
+- **Mobile‑friendly user interface** for commuters.
 
-This results in millions of commuters losing productive hours daily, skyrocketing fuel consumption, and a compounding environmental burden on already-stressed urban ecosystems.
+The platform not only helps individuals reach their destinations faster; it also promotes sustainable travel, reduces emissions, and eases burden on urban infrastructure.
 
-## 🧠 Solution Approach
-TramAI is designed as a multi-layer intelligent mobility system that integrates traffic intelligence, venue-based congestion analysis, and AI-powered recommendations.
+---
 
-### 1️⃣ Data Aggregation Layer
-1) Real-time traffic data
+## 🚀 Key Features
 
-2) Road network intelligence (OSM / OSRM)
+1. **Smart Commute Planner** – offers fastest, balanced and scenic routes with live traffic overlays.
+2. **Dynamic Congestion Forecasting** – AI predicts traffic build‑ups hours ahead.
+3. **Venue & Event Intelligence** – estimates impact zones for concerts, festivals, and sports events.
+4. **Cross‑modal Integration** – integrates buses, metro, ride‑shares, and pedestrian pathways.
+5. **Admin Dashboard** – public‑sector users can monitor network health, push advisories, and manage incidents.
+6. **Mobile Integration** – lightweight progressive web app for commuters on the go.
+7. **Sustainability Indicators** – calculates estimated fuel savings and emission reductions per trip.
 
-3) Signals & bus stop mapping
+---
 
-4) Weather conditions
+## 🧰 Technology Stack
 
-5) Venue/event metadata
+| Layer    | Technologies                                                       |
+| -------- | ------------------------------------------------------------------ |
+| Frontend | **Next.js**, TypeScript, Tailwind CSS, Framer Motion, Mapbox GL JS |
+| Backend  | **FastAPI** (Python), Uvicorn, Celery for async tasks              |
+| Routing  | OSRM (Open Source Routing Machine), Nominatim, Overpass API        |
+| AI / ML  | LLaMA models (Groq inference), scikit‑learn, pandas                |
+| Database | PostgreSQL + PostGIS, Redis cache                                  |
+| Mobile   | React (as PWA) integrated with native wrappers (Android/iOS)       |
+| DevOps   | Docker, GitHub Actions, Azure App Service                          |
 
-2️⃣ Analysis Engine (FastAPI + AI)
+> 📁 _Screenshots and demo assets_ are stored under `docs/screenshots/`. Add your mobile and admin integration images there like `user_mobile.png`, `admin_dashboard.png`.
 
-1) Traffic prediction scoring
+---
 
-2) Congestion intensity modeling
+## 📷 Demo Screenshots
 
-3) Route comparison (Fastest / Balanced / Scenic)
+Below are the screenshots you uploaded. If you want a different primary image, tell me which filename to highlight.
 
-4) Impact zone detection
+![Mobile 08:18:16 (1)](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.16%20%281%29.jpeg)
 
-5) AI-based recommendation generation using LLaMA
+![Mobile 08:18:16](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.16.jpeg)
 
-3️⃣ Decision Intelligence Layer
+![Mobile 08:18:17 (1)](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17%20%281%29.jpeg)
 
-1) AI confidence scoring
+![Mobile 08:18:17](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17.jpeg)
 
-2) Public advisory generation
+![Mobile 08:18:18 (1)](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.18%20%281%29.jpeg)
 
-3) Venue-based traffic prediction
+![Mobile 08:18:18](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.18.jpeg)
 
-4) Metro proximity calculation
+![Mobile 08:18:19](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.19.jpeg)
 
-5) Route congestion heat evaluation
+![Mobile 08:18:20](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.20.jpeg)
 
-4️⃣ Presentation Layer (Next.js)
+![Mobile 08:18:21](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.21.jpeg)
 
-1) Smart commute planner
+> _Images are stored in `docs/screenshots/`. If any file is missing or you prefer `png` files, upload them and I'll update the gallery._
 
-2) Live traffic dashboard
+---
 
-3) Venue intelligence panel
+## 📊 Why Tram.AI Beats Google Maps
 
-4) City-wide network visualization
+| Capability                                 | Tram.AI | Google Maps |
+| ------------------------------------------ | ------- | ----------- |
+| Real‑time AI congestion forecasting        | ✅      | ❌          |
+| Venue/event impact analysis                | ✅      | ❌          |
+| Multi‑modality with public transit metrics | ✅      | Partial     |
+| Admin control panel                        | ✅      | ❌          |
+| Sustainability & emissions estimates       | ✅      | ❌          |
+| Lightweight mobile PWA                     | ✅      | ✅          |
 
-5) AI-generated traffic recommendations
+> While Google Maps is a general‑purpose navigator, Tram.AI is tailored for urban planners and commuters in congested cities, offering predictive intelligence and administrative controls that Google cannot provide.
 
-The system is designed to move beyond basic navigation and into predictive urban mobility intelligence.
+---
 
+## ⚙️ Quick Start
 
-## 🏗 Tech Stack
+1. **Clone repository**
 
-### <b>🎨 Frontend </b>
+   ```bash
+   git clone https://github.com/<your‑org>/Tram.AI.git
+   cd Tram.AI
+   ```
 
-1) Next.js (App Router)
+2. **Backend setup**
 
-2) TypeScript
+   ```bash
+   python -m venv venv
+   source venv/Scripts/activate      # Windows
+   pip install -r requirements.txt
+   cd src/backend
+   uvicorn main:app --reload
+   ```
 
-3) Tailwind CSS
+3. **Frontend setup**
 
-4) Framer Motion (animations)
+   ```bash
+   cd ../frontend
+   npm install
+   npm run dev
+   ```
 
-5) Map visualization ()
+4. **Seed database & start OSRM**
+   - run `scripts/setup_db.sh` and `scripts/start_osrm.sh` (see `Implementation.md`).
 
-### <b> ⚙ Backend </b>
+5. **Mobile app**
+   - open `android/` in Android Studio or run PWA from the browser.
 
-1) FastAPI
+6. **Admin console** available at `http://localhost:3000/admin`.
 
-2) Python
+> 🔧 For production, build docker images and deploy via Docker Compose or Azure DevOps pipelines (see `azure-pipelines.yml`).
 
-3) OSRM (Routing engine)
+---
 
-4) Overpass API (Signal & bus stop data)
+## 🌱 Conclusion
 
-5) Nominatim (Geocoding)
+Tram.AI is more than a navigation tool; it's a **sustainable mobility platform** built for the realities of modern Indian cities. By combining AI forecasting, multi‑modal planning, and admin oversight, we help reduce congestion, cut emissions, and make urban travel smarter. Our solution addresses real‑world pain points—lost productivity, degraded air quality, and fragmented transit systems—while keeping an eye on environmental stewardship and the health of urban ecosystems.
 
-### <b> 🧠 AI Layer </b>
-
-1) LLaMA (via Groq / inference engine)
-
-2) AI-based traffic interpretation
-
-3) Smart recommendation generation
-
-4) Event impact summarization
-
-### <b> 🗄 Data Sources </b>
-
-1) OpenStreetMap
-
-2) OSRM routing engine
-
-3) Weather API
-
-4) Real-time venue data
-
-5) Traffic scoring logic
+Let’s move cities forward, one intelligent route at a time.
