@@ -19,50 +19,50 @@ This results in millions of commuters losing productive hours daily, skyrocketin
 TramAI is designed as a multi-layer intelligent mobility system that integrates traffic intelligence, venue-based congestion analysis, and AI-powered recommendations.
 
 ### 1️⃣ Data Aggregation Layer
-Real-time traffic data
+1) Real-time traffic data
 
-Road network intelligence (OSM / OSRM)
+2) Road network intelligence (OSM / OSRM)
 
-Signals & bus stop mapping
+3) Signals & bus stop mapping
 
-Weather conditions
+4) Weather conditions
 
-Venue/event metadata
+5) Venue/event metadata
 
 2️⃣ Analysis Engine (FastAPI + AI)
 
-Traffic prediction scoring
+1) Traffic prediction scoring
 
-Congestion intensity modeling
+2) Congestion intensity modeling
 
-Route comparison (Fastest / Balanced / Scenic)
+3) Route comparison (Fastest / Balanced / Scenic)
 
-Impact zone detection
+4) Impact zone detection
 
-AI-based recommendation generation using LLaMA
+5) AI-based recommendation generation using LLaMA
 
 3️⃣ Decision Intelligence Layer
 
-AI confidence scoring
+1) AI confidence scoring
 
-Public advisory generation
+2) Public advisory generation
 
-Venue-based traffic prediction
+3) Venue-based traffic prediction
 
-Metro proximity calculation
+4) Metro proximity calculation
 
-Route congestion heat evaluation
+5) Route congestion heat evaluation
 
 4️⃣ Presentation Layer (Next.js)
 
-Smart commute planner
+1) Smart commute planner
 
-Live traffic dashboard
+2) Live traffic dashboard
 
-Venue intelligence panel
+3) Venue intelligence panel
 
-City-wide network visualization
+4) City-wide network visualization
 
-AI-generated traffic recommendations
+5) AI-generated traffic recommendations
 
 The system is designed to move beyond basic navigation and into predictive urban mobility intelligence.
