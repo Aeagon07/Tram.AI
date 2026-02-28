@@ -37,9 +37,9 @@ The platform not only helps individuals reach their destinations faster; it also
 | Backend  | **FastAPI** (Python), Uvicorn, Celery for async tasks              |
 | Routing  | OSRM (Open Source Routing Machine), Nominatim, Overpass API        |
 | AI / ML  | LLaMA models (Groq inference), scikit‑learn, pandas                |
-| Database | PostgreSQL + PostGIS, Redis cache                                  |
-| Mobile   | React (as PWA) integrated with native wrappers (Android/iOS)       |
-| DevOps   | Docker, GitHub Actions, Azure App Service                          |
+| Database | Dynamic Duk-Duk Go Web Scrap | cache                                  |
+| Mobile   | Flutter using Dart|
+
 
 > 📁 _Screenshots and demo assets_ are stored under `docs/screenshots/`. Add your mobile and admin integration images there like `user_mobile.png`, `admin_dashboard.png`.
 
@@ -55,10 +55,6 @@ Below are the screenshots you uploaded. If you want a different primary image, t
 ![Mobile 08:18:17 (1)](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17%20%281%29.jpeg)
 
 ![Mobile 08:18:17](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17.jpeg)
-
-![Mobile 08:18:18 (1)](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.18%20%281%29.jpeg)
-
-![Mobile 08:18:18](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.18.jpeg)
 
 ![Mobile 08:18:19](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.19.jpeg)
 
