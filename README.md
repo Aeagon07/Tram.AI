@@ -52,39 +52,43 @@ Below are the screenshots showcasing Tram.AI's mobile and admin interfaces.
 
 ### User Mobile Interface
 
-<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.16%20%281%29.jpeg" alt="User mobile app home screen" width="400" />
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.16%20%281%29.jpeg" alt="Smart venue traffic API" width="400" />
 
-**Description:** Mobile commuter interface showing the smart route planner with real-time traffic overlay and route options.
+**Description:** Smart venue traffic detection and real-time API integration showing venue-based congestion analysis and event impact predictions.
 
-<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17%20%281%29.jpeg" alt="User mobile detailed route view" width="400" />
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17%20%281%29.jpeg" alt="WhatsApp integration feature" width="400" />
 
-**Description:** Detailed route view with turn-by-turn navigation, congestion predictions, and estimated arrival times.
+**Description:** WhatsApp integration - key feature implemented in the website enabling direct customer support, ride notifications, and real-time updates via messaging.
 
-### Admin Dashboard Interface
+### WhatsApp Integration
 
-<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2010.34.47.jpeg" alt="Admin dashboard main view" width="400" />
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2010.34.47.jpeg" alt="WhatsApp integration details" width="400" />
 
-**Description:** Admin console showing city-wide traffic heatmap, incident management, and real-time network health metrics.
+**Description:** WhatsApp integration showing message interactions, booking confirmations, and customer engagement through direct messaging.
 
-<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2010.34.48.jpeg" alt="Admin dashboard alerts and analytics" width="400" />
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2010.34.48.jpeg" alt="WhatsApp support and updates" width="400" />
 
-**Description:** Admin panel displaying traffic alerts, public transit coordination, and predictive congestion analysis.
+**Description:** WhatsApp customer support and ride status updates showing real-time notifications and direct communication with users.
 
-### Additional Mobile Features
+### Route Planning & Traffic Analysis
 
-<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17.jpeg" alt="Mobile route comparison" width="400" />
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17.jpeg" alt="Route computation feature" width="400" />
 
-**Description:** Route comparison view (Fastest, Balanced, Scenic) with sustainability metrics and emission estimates.
+**Description:** Route computation engine analyzing real-time traffic conditions and computing optimal paths.
 
-<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.19.jpeg" alt="Mobile preferences and settings" width="400" />
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.19.jpeg" alt="Traffic and route optimization" width="400" />
 
-**Description:** User preferences and transportation mode selection (car, public transit, bike, pedestrian).
+**Description:** Real-time traffic monitoring and route optimization considering multiple transportation modes and congestion patterns.
 
-<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.20.jpeg" alt="Mobile saved routes and history" width="400" />
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.20.jpeg" alt="Advanced traffic analysis" width="400" />
 
-**Description:** Saved routes and trip history for quick access to frequently traveled paths.
+**Description:** Compute route engine analyzing real-time traffic conditions, identifying bottlenecks, and providing alternative pathways with traffic issue alerts.
 
-![Mobile 08:18:21](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.21.jpeg)
+### Map Integration
+
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.21.jpeg" alt="Map integration in website" width="400" />
+
+**Description:** Map integration in the website displaying real-time vehicle locations, live route visualization, and interactive navigation interface.
 
 > _Images are stored in `docs/screenshots/`. If any file is missing or you prefer `png` files, upload them and I'll update the gallery._
 
