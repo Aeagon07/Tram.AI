@@ -72,14 +72,14 @@ Below are the screenshots you uploaded. If you want a different primary image, t
 
 ## 📊 Why Tram.AI Beats Google Maps
 
-| Capability                                 | Tram.AI | Google Maps |
-| ------------------------------------------ | ------- | ----------- |
-| Real‑time AI congestion forecasting        | ✅      | ❌          |
-| Venue/event impact analysis                | ✅      | ❌          |
-| Multi‑modality with public transit metrics | ✅      | Partial     |
-| Admin control panel                        | ✅      | ❌          |
-| Sustainability & emissions estimates       | ✅      | ❌          |
-| Lightweight mobile PWA                     | ✅      | ✅          |
+| Capability                                 | Google Maps | Tram.AI |
+| ------------------------------------------ | ----------- | ------- |
+| Real‑time AI congestion forecasting        | ❌          | ✅      |
+| Venue/event impact analysis                | ❌          | ✅      |
+| Multi‑modality with public transit metrics | Partial     | ✅      |
+| Admin control panel                        | ❌          | ✅      |
+| Sustainability & emissions estimates       | ❌          | ✅      |
+| Lightweight mobile PWA                     | ✅          | ✅      |
 
 > While Google Maps is a general‑purpose navigator, Tram.AI is tailored for urban planners and commuters in congested cities, offering predictive intelligence and administrative controls that Google cannot provide.
 
