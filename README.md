@@ -34,14 +34,13 @@ The platform not only helps individuals reach their destinations faster; it also
 ## 🧰 Technology Stack
 
 | Layer    | Technologies                                                       |
-| -------- | ------------------------------------------------------------------ |
+| -------- | ------------------------------------------------------------------ | ----- |
 | Frontend | **Next.js**, TypeScript, Tailwind CSS, Framer Motion, Mapbox GL JS |
 | Backend  | **FastAPI** (Python), Uvicorn, Celery for async tasks              |
 | Routing  | OSRM (Open Source Routing Machine), Nominatim, Overpass API        |
 | AI / ML  | LLaMA models (Groq inference), scikit‑learn, pandas                |
-| Database | Dynamic Duk-Duk Go Web Scrap | cache                                  |
-| Mobile   | Flutter using Dart|
-
+| Database | Dynamic Duk-Duk Go Web Scrap                                       | cache |
+| Mobile   | Flutter using Dart                                                 |
 
 > 📁 _Screenshots and demo assets_ are stored under `docs/screenshots/`. Add your mobile and admin integration images there like `user_mobile.png`, `admin_dashboard.png`.
 
@@ -53,8 +52,11 @@ Below are the screenshots you uploaded. If you want a different primary image, t
 
 ![Mobile 08:18:16 (1)](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.16%20%281%29.jpeg)
 
-
 ![Mobile 08:18:17 (1)](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17%20%281%29.jpeg)
+
+![Admin Dashboard 10:34:47](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2010.34.47.jpeg)
+
+![Admin Dashboard 10:34:48](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2010.34.48.jpeg)
 
 ![Mobile 08:18:17](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17.jpeg)
 
