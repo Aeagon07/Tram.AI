@@ -51,7 +51,6 @@ Below are the screenshots you uploaded. If you want a different primary image, t
 
 ![Mobile 08:18:16 (1)](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.16%20%281%29.jpeg)
 
-![Mobile 08:18:16](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.16.jpeg)
 
 ![Mobile 08:18:17 (1)](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17%20%281%29.jpeg)
 
