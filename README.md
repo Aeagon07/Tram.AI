@@ -2,6 +2,8 @@
 
 > **Intelligent, AI-driven urban commute planner and traffic management platform**
 
+![Tram.AI Platform](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2010.32.43.jpeg)
+
 ---
 
 ## 📌 Project Overview
