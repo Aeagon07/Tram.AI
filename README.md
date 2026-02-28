@@ -34,13 +34,13 @@ The platform not only helps individuals reach their destinations faster; it also
 ## 🧰 Technology Stack
 
 | Layer    | Technologies                                                       |
-| -------- | ------------------------------------------------------------------ | ----- |
+| -------- | ------------------------------------------------------------------ |
 | Frontend | **Next.js**, TypeScript, Tailwind CSS, Framer Motion, Mapbox GL JS |
 | Backend  | **FastAPI** (Python), Uvicorn, Celery for async tasks              |
 | Routing  | OSRM (Open Source Routing Machine), Nominatim, Overpass API        |
 | AI / ML  | LLaMA models (Groq inference), scikit‑learn, pandas                |
-| Database | Dynamic Duk-Duk Go Web Scrap                                       | cache |
-| Mobile   | Flutter using Dart                                                 |
+| Database | PostgreSQL + PostGIS, Redis cache                                  |
+| Mobile   | React (PWA), Flutter (native wrappers)                             |
 
 > 📁 _Screenshots and demo assets_ are stored under `docs/screenshots/`. Add your mobile and admin integration images there like `user_mobile.png`, `admin_dashboard.png`.
 
@@ -48,21 +48,41 @@ The platform not only helps individuals reach their destinations faster; it also
 
 ## 📷 Demo Screenshots
 
-Below are the screenshots you uploaded. If you want a different primary image, tell me which filename to highlight.
+Below are the screenshots showcasing Tram.AI's mobile and admin interfaces.
 
-![Mobile 08:18:16 (1)](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.16%20%281%29.jpeg)
+### User Mobile Interface
 
-![Mobile 08:18:17 (1)](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17%20%281%29.jpeg)
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.16%20%281%29.jpeg" alt="User mobile app home screen" width="400" />
 
-![Admin Dashboard 10:34:47](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2010.34.47.jpeg)
+**Description:** Mobile commuter interface showing the smart route planner with real-time traffic overlay and route options.
 
-![Admin Dashboard 10:34:48](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2010.34.48.jpeg)
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17%20%281%29.jpeg" alt="User mobile detailed route view" width="400" />
 
-![Mobile 08:18:17](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17.jpeg)
+**Description:** Detailed route view with turn-by-turn navigation, congestion predictions, and estimated arrival times.
 
-![Mobile 08:18:19](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.19.jpeg)
+### Admin Dashboard Interface
 
-![Mobile 08:18:20](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.20.jpeg)
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2010.34.47.jpeg" alt="Admin dashboard main view" width="400" />
+
+**Description:** Admin console showing city-wide traffic heatmap, incident management, and real-time network health metrics.
+
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2010.34.48.jpeg" alt="Admin dashboard alerts and analytics" width="400" />
+
+**Description:** Admin panel displaying traffic alerts, public transit coordination, and predictive congestion analysis.
+
+### Additional Mobile Features
+
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17.jpeg" alt="Mobile route comparison" width="400" />
+
+**Description:** Route comparison view (Fastest, Balanced, Scenic) with sustainability metrics and emission estimates.
+
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.19.jpeg" alt="Mobile preferences and settings" width="400" />
+
+**Description:** User preferences and transportation mode selection (car, public transit, bike, pedestrian).
+
+<img src="public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.20.jpeg" alt="Mobile saved routes and history" width="400" />
+
+**Description:** Saved routes and trip history for quick access to frequently traveled paths.
 
 ![Mobile 08:18:21](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.21.jpeg)
 
