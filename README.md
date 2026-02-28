@@ -14,3 +14,55 @@ The root cause is systemic:
 - 🔗 **Zero cross-modal integration** — buses, metro, auto-rickshaws, ride-shares, and private vehicles operate in silos
 
 This results in millions of commuters losing productive hours daily, skyrocketing fuel consumption, and a compounding environmental burden on already-stressed urban ecosystems.
+
+## 🧠 Solution Approach
+TramAI is designed as a multi-layer intelligent mobility system that integrates traffic intelligence, venue-based congestion analysis, and AI-powered recommendations.
+
+### 1️⃣ Data Aggregation Layer
+Real-time traffic data
+
+Road network intelligence (OSM / OSRM)
+
+Signals & bus stop mapping
+
+Weather conditions
+
+Venue/event metadata
+
+2️⃣ Analysis Engine (FastAPI + AI)
+
+Traffic prediction scoring
+
+Congestion intensity modeling
+
+Route comparison (Fastest / Balanced / Scenic)
+
+Impact zone detection
+
+AI-based recommendation generation using LLaMA
+
+3️⃣ Decision Intelligence Layer
+
+AI confidence scoring
+
+Public advisory generation
+
+Venue-based traffic prediction
+
+Metro proximity calculation
+
+Route congestion heat evaluation
+
+4️⃣ Presentation Layer (Next.js)
+
+Smart commute planner
+
+Live traffic dashboard
+
+Venue intelligence panel
+
+City-wide network visualization
+
+AI-generated traffic recommendations
+
+The system is designed to move beyond basic navigation and into predictive urban mobility intelligence.
