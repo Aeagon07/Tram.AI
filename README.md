@@ -66,3 +66,52 @@ TramAI is designed as a multi-layer intelligent mobility system that integrates 
 5) AI-generated traffic recommendations
 
 The system is designed to move beyond basic navigation and into predictive urban mobility intelligence.
+
+
+## 🏗 Tech Stack
+
+### <b>🎨 Frontend </b>
+
+1) Next.js (App Router)
+
+2) TypeScript
+
+3) Tailwind CSS
+
+4) Framer Motion (animations)
+
+5) Map visualization ()
+
+### <b> ⚙ Backend </b>
+
+1) FastAPI
+
+2) Python
+
+3) OSRM (Routing engine)
+
+4) Overpass API (Signal & bus stop data)
+
+5) Nominatim (Geocoding)
+
+### <b> 🧠 AI Layer </b>
+
+1) LLaMA (via Groq / inference engine)
+
+2) AI-based traffic interpretation
+
+3) Smart recommendation generation
+
+4) Event impact summarization
+
+### <b> 🗄 Data Sources </b>
+
+1) OpenStreetMap
+
+2) OSRM routing engine
+
+3) Weather API
+
+4) Real-time venue data
+
+5) Traffic scoring logic
