@@ -49,23 +49,23 @@ The platform not only helps individuals reach their destinations faster; it also
 
 Below are the screenshots you uploaded. If you want a different primary image, tell me which filename to highlight.
 
-![Mobile 08:18:16 (1)](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.16%20%281%29.jpeg)
+![Mobile 08:18:16 (1)](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.16%20%281%29.jpeg)
 
-![Mobile 08:18:16](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.16.jpeg)
+![Mobile 08:18:16](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.16.jpeg)
 
-![Mobile 08:18:17 (1)](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17%20%281%29.jpeg)
+![Mobile 08:18:17 (1)](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17%20%281%29.jpeg)
 
-![Mobile 08:18:17](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17.jpeg)
+![Mobile 08:18:17](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.17.jpeg)
 
-![Mobile 08:18:18 (1)](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.18%20%281%29.jpeg)
+![Mobile 08:18:18 (1)](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.18%20%281%29.jpeg)
 
-![Mobile 08:18:18](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.18.jpeg)
+![Mobile 08:18:18](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.18.jpeg)
 
-![Mobile 08:18:19](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.19.jpeg)
+![Mobile 08:18:19](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.19.jpeg)
 
-![Mobile 08:18:20](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.20.jpeg)
+![Mobile 08:18:20](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.20.jpeg)
 
-![Mobile 08:18:21](docs/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.21.jpeg)
+![Mobile 08:18:21](public/images/screenshots/WhatsApp%20Image%202026-02-28%20at%2008.18.21.jpeg)
 
 > _Images are stored in `docs/screenshots/`. If any file is missing or you prefer `png` files, upload them and I'll update the gallery._
 
